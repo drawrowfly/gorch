@@ -2,41 +2,52 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"regexp"
+
+	"github.com/gorilla/mux"
 )
+
+type GorchCreateWalletResponse struct {
+	Status     bool   `json:"status"`
+	WalletName string `json:"wallet_name"`
+	Address    string `json:"address"`
+}
+
+type WalletList struct {
+	WalletName string `json:"wallet_name"`
+	Address    string `json:"address"`
+}
 
 func createWalletHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(400)
 
+	// Get --home option
+	vars := mux.Vars(r)
+	home := vars["home"]
+
 	status := true
 
-	address, walletName, err := createArchwayWallet()
+	address, walletName, err := createArchwayWallet(home)
 	if err != nil {
 		status = false
 	}
-	json.NewEncoder(w).Encode(GorchWallet{Status: status, WalletName: walletName, Address: address})
+	json.NewEncoder(w).Encode(GorchCreateWalletResponse{Status: status, WalletName: walletName, Address: address})
 }
 
 func getWalletListHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(400)
 
-	status := true
+	// Get --home option
+	vars := mux.Vars(r)
+	home := vars["home"]
 
-	list, err := getArchwayWalletList()
+	walletList, err := getArchwayWalletList(home)
 	if err != nil {
-		status = false
+		json.NewEncoder(w).Encode(walletList)
+		return
 	}
 
-	walletAddressRegx := regexp.MustCompile(`- name: \"([\w].*)"\n.*\n.*address: (archway[\w].*)`)
-	walletAddressResult := walletAddressRegx.FindAllStringSubmatch(list, -1)
-
-	fmt.Println(list)
-
-	fmt.Println(walletAddressResult)
-
-	json.NewEncoder(w).Encode(GorchWallet{Status: status})
+	json.NewEncoder(w).Encode(walletList)
 }

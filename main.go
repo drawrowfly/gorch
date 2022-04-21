@@ -19,17 +19,11 @@ const (
 
 var router = mux.NewRouter()
 
-type GorchWallet struct {
-	Status     bool   `json:"status"`
-	WalletName string `json:"wallet_name"`
-	Address    string `json:"address"`
-}
-
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	router.HandleFunc("/wallet/create", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/wallet/create/{home}", func(w http.ResponseWriter, r *http.Request) {
 		createWalletHandler(w, r)
 	}).Methods("GET")
 
