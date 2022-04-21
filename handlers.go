@@ -31,7 +31,7 @@ func getWalletListHandler(w http.ResponseWriter, r *http.Request) {
 		status = false
 	}
 
-	walletAddressRegx := regexp.MustCompile(`name: \"([\w].*)"  type: local  address: (archway[\w].*)`)
+	walletAddressRegx := regexp.MustCompile(`- name: \"([\w].*)"\n.*\n.*address: (archway[\w].*)`)
 	walletAddressResult := walletAddressRegx.FindAllStringSubmatch(list, -1)
 
 	fmt.Println(list)
