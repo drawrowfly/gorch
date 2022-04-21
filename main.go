@@ -27,7 +27,7 @@ func main() {
 		createWalletHandler(w, r)
 	}).Methods("GET")
 
-	router.HandleFunc("/wallet/list", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/wallet/list/{home}", func(w http.ResponseWriter, r *http.Request) {
 		getWalletListHandler(w, r)
 	}).Methods("GET")
 
