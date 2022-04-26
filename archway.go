@@ -71,10 +71,16 @@ func farmArchwayWallet(home string) (string, error) {
 			continue
 		}
 
-		_, err = exec.Command("bash", "-c", "echo 'password' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg "+balance+"utorii --chain-id torii-1 -y --home ~/"+home).Output()
-
-		if err != nil {
-			continue
+		if home == "~" {
+			_, err = exec.Command("bash", "-c", "echo 'VAx;h8)\"jm)XEtV@Z\"kREKw`f' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg "+balance+"utorii --chain-id torii-1 -y").Output()
+			if err != nil {
+				continue
+			}
+		} else {
+			_, err = exec.Command("bash", "-c", "echo 'password' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg "+balance+"utorii --chain-id torii-1 -y --home ~/"+home).Output()
+			if err != nil {
+				continue
+			}
 		}
 
 		deleteArchwayWallet(k.WalletName, home)
