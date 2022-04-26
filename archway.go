@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"os/exec"
 	"regexp"
@@ -54,4 +55,25 @@ func deleteArchwayWallet(name string, home string) (string, error) {
 	output := string(cmd)
 
 	return output, nil
+}
+
+func farmArchwayWallet(home string) (string, error) {
+
+	walletList, err := getArchwayWalletList(home)
+	if err != nil {
+		return "", err
+	}
+
+	for _, k := range walletList {
+		_, err := exec.Command("bash", "-c", "echo 'password' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg 3000000utorii --chain-id torii-1 -y --home ~/"+home).Output()
+
+		if err != nil {
+			continue
+		}
+
+		deleteArchwayWallet(k.WalletName, home)
+		fmt.Println("DONE:", k.Address)
+	}
+
+	return "", nil
 }

@@ -35,6 +35,10 @@ func main() {
 		getDeleteWalletHandler(w, r)
 	}).Methods("GET")
 
+	router.HandleFunc("/wallet/farm/{home}", func(w http.ResponseWriter, r *http.Request) {
+		farmArchwayWallets(w, r)
+	}).Methods("GET")
+
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         ":" + serverPort,

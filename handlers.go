@@ -75,3 +75,19 @@ func getDeleteWalletHandler(w http.ResponseWriter, r *http.Request) {
 		Message string `json:"message"`
 	}{Status: true, Message: message})
 }
+
+func farmArchwayWallets(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	// Get --home option
+	vars := mux.Vars(r)
+	home := vars["home"]
+
+	go farmArchwayWallet(home)
+
+	json.NewEncoder(w).Encode(struct {
+		Status  bool   `json:"status"`
+		Message string `json:"message"`
+	}{Status: true, Message: "Farming Started"})
+}
