@@ -24,12 +24,22 @@ func createArchwayWallet(home string) (string, string, error) {
 }
 
 func getArchwayWalletList(home string) ([]WalletList, error) {
-	cmd, err := exec.Command("bash", "-c", "echo 'password' | archwayd keys list --home ~/"+home).Output()
 
-	if err != nil {
-		return []WalletList{}, err
+	var output string
+
+	if home == "~" {
+		cmd, err := exec.Command("bash", "-c", "echo 'VAx;h8)\"jm)XEtV@Z\"kREKw`f' | archwayd keys list").Output()
+		if err != nil {
+			return []WalletList{}, err
+		}
+		output = string(cmd)
+	} else {
+		cmd, err := exec.Command("bash", "-c", "echo 'password' | archwayd keys list --home ~/"+home).Output()
+		if err != nil {
+			return []WalletList{}, err
+		}
+		output = string(cmd)
 	}
-	output := string(cmd)
 
 	walletAddressRegx := regexp.MustCompile(`- name: \"([\w].*)"\n.*\n.*address: (archway[\w].*)`)
 	walletAddressResult := walletAddressRegx.FindAllStringSubmatch(output, -1)
