@@ -39,6 +39,10 @@ func main() {
 		farmArchwayWallets(w, r)
 	}).Methods("GET")
 
+	router.HandleFunc("/wallet/balance/{wallet}", func(w http.ResponseWriter, r *http.Request) {
+		walletBalance(w, r)
+	}).Methods("GET")
+
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         ":" + serverPort,

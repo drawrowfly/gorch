@@ -77,3 +77,20 @@ func farmArchwayWallet(home string) (string, error) {
 
 	return "", nil
 }
+
+func getWalletBalance(wallet string) (string, error) {
+
+	cmd, err := exec.Command("bash", "-c", "archwayd q bank balances "+wallet).Output()
+
+	if err != nil {
+		return "", err
+	}
+
+	output := string(cmd)
+
+	walletBalanceRegx := regexp.MustCompile(`- amount.*"([0-9]+)"`)
+	walletBalanceResult := walletBalanceRegx.FindAllStringSubmatch(output, -1)
+
+	fmt.Println(walletBalanceResult)
+	return "", nil
+}
