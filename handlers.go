@@ -107,6 +107,7 @@ func walletBalance(w http.ResponseWriter, r *http.Request) {
 			Status  bool   `json:"status"`
 			Balance string `json:"balance"`
 		}{Status: false, Balance: "0"})
+		return
 	}
 	json.NewEncoder(w).Encode(struct {
 		Status  bool   `json:"status"`

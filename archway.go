@@ -65,14 +65,20 @@ func farmArchwayWallet(home string) (string, error) {
 	}
 
 	for _, k := range walletList {
-		_, err := exec.Command("bash", "-c", "echo 'password' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg 3000000utorii --chain-id torii-1 -y --home ~/"+home).Output()
+
+		balance, err := getWalletBalance(k.Address)
+		if err != nil {
+			continue
+		}
+
+		_, err = exec.Command("bash", "-c", "echo 'password' | archwayd tx bank send "+k.Address+" archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg "+balance+"utorii --chain-id torii-1 -y --home ~/"+home).Output()
 
 		if err != nil {
 			continue
 		}
 
 		deleteArchwayWallet(k.WalletName, home)
-		fmt.Println("DONE:", k.Address)
+		fmt.Println("DONE:", k.Address, balance)
 	}
 
 	return "", nil
@@ -91,6 +97,5 @@ func getWalletBalance(wallet string) (string, error) {
 	walletBalanceRegx := regexp.MustCompile(`- amount.*"([0-9]+)"`)
 	walletBalanceResult := walletBalanceRegx.FindAllStringSubmatch(output, -1)
 
-	fmt.Println(walletBalanceResult)
-	return "", nil
+	return walletBalanceResult[0][1], nil
 }
