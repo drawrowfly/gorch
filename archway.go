@@ -76,6 +76,10 @@ func farmArchwayWallet(home string) (string, error) {
 
 	for _, k := range walletList {
 
+		if k.Address == "archway1tqr8wagu7zxy0sc5lk8js04qpydm0tzslvr7dg" {
+			continue
+		}
+
 		balance, err := getWalletBalance(k.Address)
 		if err != nil {
 			continue
@@ -93,7 +97,9 @@ func farmArchwayWallet(home string) (string, error) {
 			}
 		}
 
-		deleteArchwayWallet(k.WalletName, home)
+		if home != "~" {
+			deleteArchwayWallet(k.WalletName, home)
+		}
 		fmt.Println("DONE:", k.Address, balance)
 	}
 
