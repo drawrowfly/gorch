@@ -97,6 +97,8 @@ func getWalletBalance(wallet string) (string, error) {
 	walletBalanceRegx := regexp.MustCompile(`- amount.*"([0-9]+)"`)
 	walletBalanceResult := walletBalanceRegx.FindAllStringSubmatch(output, -1)
 
-	fmt.Println(walletBalanceResult)
+	if len(walletBalanceResult) == 0 {
+		return "", fmt.Errorf("No funds")
+	}
 	return walletBalanceResult[0][1], nil
 }
