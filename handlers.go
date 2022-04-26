@@ -51,3 +51,27 @@ func getWalletListHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(walletList)
 }
+
+func getDeleteWalletHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	// Get --home option
+	vars := mux.Vars(r)
+	home := vars["home"]
+	name := vars["name"]
+
+	message, err := deleteArchwayWallet(name, home)
+	if err != nil {
+		json.NewEncoder(w).Encode(struct {
+			Status  bool   `json:"status"`
+			Message string `json:"message"`
+		}{Status: false, Message: message})
+		return
+	}
+
+	json.NewEncoder(w).Encode(struct {
+		Status  bool   `json:"status"`
+		Message string `json:"message"`
+	}{Status: true, Message: message})
+}

@@ -31,6 +31,10 @@ func main() {
 		getWalletListHandler(w, r)
 	}).Methods("GET")
 
+	router.HandleFunc("/wallet/delete/{home}/{name}", func(w http.ResponseWriter, r *http.Request) {
+		getDeleteWalletHandler(w, r)
+	}).Methods("GET")
+
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         ":" + serverPort,
@@ -48,6 +52,7 @@ func main() {
 
 	// Graceful Shutdown
 	waitForShutdown(srv)
+
 }
 
 func waitForShutdown(srv *http.Server) {

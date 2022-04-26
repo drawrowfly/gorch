@@ -44,3 +44,14 @@ func getArchwayWalletList(home string) ([]WalletList, error) {
 
 	return walletList, nil
 }
+
+func deleteArchwayWallet(name string, home string) (string, error) {
+	cmd, err := exec.Command("bash", "-c", "echo 'password' | archwayd keys delete "+name+" -y --home ~/"+home).Output()
+
+	if err != nil {
+		return "", err
+	}
+	output := string(cmd)
+
+	return output, nil
+}
